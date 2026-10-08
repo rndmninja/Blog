@@ -6,6 +6,11 @@ pipeline {
                 sh 'git pull origin main'
             }
         }
+        stage('Trivy') {
+            steps {
+                sh 'docker run --rm -v "$WORKSPACE:/project" aquasec/trivy fs --scanners vuln,secret,misconfig /project'
+            }
+        }
         stage('Build') {
             steps {
                 sh 'docker build --pull --rm -f "Dockerfile" -t blog:latest "."'
@@ -18,5 +23,6 @@ pipeline {
                 sh 'docker run -d -p 3000:3000 --name blog blog'
             }
         }
+
     }
 }
