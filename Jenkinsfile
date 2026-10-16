@@ -6,7 +6,7 @@ pipeline {
                 sh 'git pull origin main'
             }
         }
-        stage('Trivy') {
+        stage('Trivy Scan') {
             steps {
                 sh 'docker run --rm -v "$WORKSPACE:/project" aquasec/trivy fs --scanners vuln,secret,misconfig /project'
             }
@@ -23,6 +23,10 @@ pipeline {
                 sh 'docker run -d -p 3000:3000 --name blog blog'
             }
         }
-
+        stage('Nikto Scan') {
+            steps {
+                sh 'docker run --rm --network host ghcr.io/sullo/nikto:latest -h http://127.0.0.1:3000'
+            }
+}
     }
 }
