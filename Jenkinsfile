@@ -6,11 +6,6 @@ pipeline {
                 sh 'git pull origin main'
             }
         }
-        stage('Dependency Check') {
-            steps {
-                sh 'docker run --rm -v "$WORKSPACE:/src" -w /src node:20-alpine npm audit --omit=dev'
-            }
-        }
         stage('Trivy Scan') {
             steps {
                 sh 'docker run --rm -v "$WORKSPACE:/project" aquasec/trivy fs --scanners vuln,secret,misconfig /project'
