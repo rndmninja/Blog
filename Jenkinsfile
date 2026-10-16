@@ -8,7 +8,7 @@ pipeline {
         }
         stage('Dependency Check') {
             steps {
-                sh 'docker run --rm -v "$WORKSPACE:/src" -v "$WORKSPACE/dependency-check-data:/usr/share/dependency-check/data" owasp/dependency-check:latest --scan /src --format HTML --out /src/dependency-check-report'
+                sh 'docker run --rm -v "$WORKSPACE:/src" -w /src node:20-alpine npm audit --omit=dev'
             }
         }
         stage('Trivy Scan') {
