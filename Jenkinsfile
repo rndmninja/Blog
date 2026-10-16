@@ -6,6 +6,11 @@ pipeline {
                 sh 'git pull origin main'
             }
         }
+        stage('Dependency Check') {
+            steps {
+                sh 'docker run --rm -v "$WORKSPACE:/src" owasp/dependency-check:latest --scan /src --format HTML --out /src/dependency-check-report'
+            }
+        }
         stage('Trivy Scan') {
             steps {
                 sh 'docker run --rm -v "$WORKSPACE:/project" aquasec/trivy fs --scanners vuln,secret,misconfig /project'
