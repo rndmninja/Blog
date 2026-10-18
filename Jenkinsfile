@@ -6,6 +6,11 @@ pipeline {
                 sh 'git pull origin main'
             }
         }
+        stage('Dependency Check') {
+            steps {
+                dependencyCheck additionalArguments: '--scan . --format XML --out dependency-check-report', odcInstallation: 'dependency-check'
+            }
+        }
         stage('Trivy Scan') {
             steps {
                 sh 'docker run --rm -v "$WORKSPACE:/project" aquasec/trivy fs --scanners vuln,secret,misconfig /project'
