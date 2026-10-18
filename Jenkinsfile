@@ -6,6 +6,11 @@ pipeline {
                 sh 'git pull origin main'
             }
         }
+        stage('Unit Tests') {
+            steps {
+                sh 'npm test'
+            }
+        } 
         stage('Trivy Scan') {
             steps {
                 sh 'docker run --rm -v "$WORKSPACE:/project" aquasec/trivy fs --scanners vuln,secret,misconfig /project'
